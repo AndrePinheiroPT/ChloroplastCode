@@ -1,26 +1,24 @@
 from math import *
 from random import randint
+from chemistry import *
 
-inner_thylakoid = {
-    'H+': 0,
-    'O2': 0,
-    'H2O': 24
-}
+HYDROGEN_CATION = Molecules('H+', 'Hydrogen cation')
+WATER = Molecules('H2O', 'Water')
+ADP = Molecules('C10H15N5O10P2', 'ADP')
+ATP = Molecules('C10H15N5O10P3', 'ATP')
+NADPP = Molecules('C21H29N7O17P3', 'NADP+')
+NADPH = Molecules('C21H30N7O17P3', 'NADPH')
+CARBON_DIOXIDE = Molecules('CO2', 'Carbon dioxide')
+RUDP = Molecules('C5H12O11P2', 'RuDP')
+PGAL_S = Molecules('C3H7O6P_S', 'PGAL_S')
+PGAL = Molecules('C3H5O5P','PGAL')
+GLICOSE = Molecules('C6H12O6', 'Glicose')
+PGA = Molecules('C3H7O7P', 'PGA')
+OXYGEN_ATOM = Molecules('O', 'Oxygen atom')
+OXYGEN = Molecules('O2', 'Oxygen') 
 
-stroma = {
-    'H+': 0,
-    'ADP': 18,
-    'ATP': 0,
-    'NADP+': 12,
-    'NADPH': 0,
-    'CO2': 12,
-    'RuDP': 6,
-    'PGA': 0,
-    'PGAL': 0,
-    'PGAL_storage': 0,
-    'C6H12O6': 0
-}
-
+inner_thylakoid_system = System(24*[WATER])
+stroma_system = System(18*[ADP]+12*[NADPP, CARBON_DIOXIDE]+6*[RUDP])
 transport_electrons = [0, 0]
 
 light_intensity = 10
@@ -64,77 +62,50 @@ photosystem1 = Photosystem(23, 12, 40)
 photosystem2 = Photosystem(23, 12, 40)
 
 def synthase_of_glicose():
-    if stroma['ADP'] >= 2 and stroma['PGAL_storage'] >= 2:
-        stroma['ADP'] -= 2
-        stroma['PGAL_storage'] -= 2
-
-        stroma['ATP'] += 2
-        stroma['C6H12O6'] += 1
+    stroma_system.do_reaction(2*[PGAL_S, ADP], 2*[ATP]+[GLICOSE])
 
 
 def calvin_cicle():
-    if stroma['CO2'] >= 1 and stroma['RuDP'] >= 1 and stroma['ATP'] >= 2:
-        stroma['CO2'] -= 1
-        stroma['RuDP'] -= 1
-        stroma['ATP'] -= 2
+    stroma_system.do_reaction([CARBON_DIOXIDE]+[RUDP]+2*[ATP], 2*[ADP, PGA])
 
-        stroma['ADP'] += 2
-        stroma['PGA'] += 2
+    stroma_system.do_reaction(2*[PGA, NADPH], 2*[NADP, PGAL])
 
-    if stroma['PGA'] >= 2 and stroma['NADPH'] >= 2:
-        stroma['PGA'] -=2
-        stroma['NADPH'] -= 2
-
-        stroma['NADP+'] += 2
-        stroma['PGAL'] += 2
-
-    if stroma['PGAL'] >= 6 and stroma['ATP'] >= 3 :
-        stroma['PGAL'] -= 5
-        stroma['ATP'] -= 3
-
-        stroma['PGAL_storage'] += 1
-        stroma['ADP'] += 3
-        stroma['RuDP'] += 3
+    stroma_system.do_reaction(5*[PGAL]+3*[ATP], [PGAL_S]+3*[ADP, RUDP])
 
 
 def ATPase():
-    global inner_thylakoid, stroma
-    if inner_thylakoid['H+'] > stroma['H+']:
-        inner_thylakoid['H+'] -= 1
-        stroma['H+'] += 1
+    if inner_thylakoid_system.length(HYDROGEN_CATION) > stroma_system.length(HYDROGEN_CATION):
+        inner_thylakoid_system.remove_molecule(HYDROGEN_CATION)
+        stroma_system.add_molecule(HYDROGEN_CATION)
 
-        if stroma['ADP'] >= 1 and inner_thylakoid['H+'] >= 1:
-            stroma['ADP'] -= 1
-            stroma['ATP'] += 1
+        if stroma_system.length(ADP) >= 1 and inner_thylakoid_system.length(HYDROGEN_CATION) >= 1:
+            stroma_system.do_reaction([ADP], [ATP])
 
 
 def water_photolysis():
-    global h2o_molecules, o2_molecules
-    if photosystem1.electrons == 0 and inner_thylakoid['H2O'] > 0:
-        inner_thylakoid['H2O'] -= 1
-        inner_thylakoid['O2'] += 1/2
-        inner_thylakoid['H+'] += 2
+    if photosystem1.electrons == 0 and inner_thylakoid_system.length(WATER) > 0:
+        inner_thylakoid_system.do_reaction([WATER], 2*[HYDROGEN_CATION]+[OXYGEN_ATOM])
+        if inner_thylakoid_system.length(OXYGEN_ATOM) > 1:
+            inner_thylakoid_system.do_reaction(2*[OXYGEN_ATOM], [OXYGEN])
+
         photosystem1.electrons += 2
         
 
 def protein_hydro():
     global inner_thylakoid
-    if transport_electrons[0] >= 2 and stroma['H+'] >= 2: 
-        inner_thylakoid['H+'] += 2
-        stroma['H+'] -= 2
+    if transport_electrons[0] >= 2 and stroma_system.length(HYDROGEN_CATION) >= 2: 
+        for i in range(0, 2):
+            inner_thylakoid_system.add_molecule(HYDROGEN_CATION)
+            stroma_system.remove_molecule(HYDROGEN_CATION)
+
         transport_electrons[0] -= 2
         photosystem2.electrons += 2 
 
 
 def nadpp_reduction():
-    global stroma
-    if transport_electrons[1] >= 2 and stroma['H+'] >= 2 and stroma['NADP+'] >= 1:
-        stroma['NADP+'] -= 1
-        stroma['H+'] -= 2
+    if transport_electrons[1] >= 2 and stroma_system.length(HYDROGEN_CATION) >= 2 and stroma_system.length(NADPP) >= 1:
+        stroma_system.do_reaction([NADPP]+2*[HYDROGEN_CATION], [NADPH, HYDROGEN_CATION])
         transport_electrons[1] -= 2
-
-        stroma['NADPH'] += 1
-        stroma['H+'] += 1
 
 
 while True:
@@ -154,4 +125,4 @@ while True:
     calvin_cicle()
     synthase_of_glicose()
         
-    print(f'inner_thylacoid: {inner_thylakoid}, stroma: {stroma}, tp: {transport_electrons}')
+    #print(f'inner_thylacoid: {inner_thylakoid}, stroma: {stroma}, tp: {transport_electrons}')
