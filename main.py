@@ -56,18 +56,18 @@ class Photosystem:
     
     def light_chlorophyllA(self, x):
         labmda = x - 400
-        if 0 <= x < 25:
-            return 1.32 * x + 134
-        elif 25 <= x < 50:
-            return -2.6 * x + 134
-        elif 50 <= x < 200:
+        if 0 <= labmda < 25:
+            return 1.32 * labmda + 134
+        elif 25 <= labmda < 50:
+            return -2.6 * labmda + 134
+        elif 50 <= labmda < 200:
             return 4
-        elif 200 <= x < 250:
-            return 0.1 * x - 16
-        elif 250 <= x < 270:
-            return 2.04 * x - 500
-        elif 270 <= x <= 300:
-            return -1.57 * x + 474
+        elif 200 <= labmda < 250:
+            return 0.1 * labmda - 16
+        elif 250 <= labmda < 270:
+            return 2.04 * labmda - 500
+        elif 270 <= labmda <= 300:
+            return -1.57 * labmda + 474
     
 
 photosystem1 = Photosystem(23, 12, 40)
