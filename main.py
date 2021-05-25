@@ -54,8 +54,20 @@ class Photosystem:
             #print(f'Energy: {self.energy}')
         
     
-    def light_chlorophyllA(self, labmda):
-        return 35*sin(-5 + labmda*1/35)+35
+    def light_chlorophyllA(self, x):
+        labmda = x - 400
+        if 0 <= x < 25:
+            return 1.32 * x + 134
+        elif 25 <= x < 50:
+            return -2.6 * x + 134
+        elif 50 <= x < 200:
+            return 4
+        elif 200 <= x < 250:
+            return 0.1 * x - 16
+        elif 250 <= x < 270:
+            return 2.04 * x - 500
+        elif 270 <= x <= 300:
+            return -1.57 * x + 474
     
 
 photosystem1 = Photosystem(23, 12, 40)
