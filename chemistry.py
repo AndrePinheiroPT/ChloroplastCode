@@ -10,11 +10,11 @@ class Molecules:
 
 
 class System:
-
-    storage = []
-
     def __init__(self, entities):
-        storage.append(*entities)
+        self.storage = []
+
+        for entitie in entities:
+            self.storage.append(entitie) 
 
     def do_reaction(self, reagents, reaction_products):
         for reagent in reagents:
@@ -22,18 +22,18 @@ class System:
                 return "it's impossible do the reaction!"
         
         for reagent in reagents:
-            for i in range(0, reagents.count(reagent)):
-                self.storage.remove(reagent)
+            del self.storage[self.storage.index(reagent)]
         
-        self.storage.append(*reaction_products)
+        for product in reaction_products:
+            self.storage.append(product)
         
 
     def add_molecule(self, molecule_object):
-        storage.append(molecule_object)
+        self.storage.append(molecule_object)
 
     def remove_molecule(self, molecule_object):
-        storage.remove(molecule_object)
+        self.storage.remove(molecule_object)
 
     def length(self, molecule_object):
-        return storage.count(molecule_object)
+        return self.storage.count(molecule_object)
     
