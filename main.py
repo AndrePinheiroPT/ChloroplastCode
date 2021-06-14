@@ -7,7 +7,8 @@ variables = [
     ['nº RuDP', 0],
     ['nº ADP', 0],
     ['nº NADP+', 0],
-    ['oxitation energy', 0]
+    ['Oxitation energy', 0],
+    ['Radiation', []]
 ]
 
 
@@ -22,28 +23,52 @@ def countdown():
 
 def menu():
     line()
-
     print('PhotoCode v1.0.0\n\
 Copyright \u00a9 André Pinheiro\n\
 Read the licence for more information')
 
     line()
-
     print('Welcome to the PhotoCode! For start a simulation, you\n\
 need the set the follow variables:')
+
     while True:
-        for variable in variables:
+        for k in range(0, 6):
             while True:
                 try:
-                    variable[1] = int(input(f'{variable[0]}: '))
+                    variables[k][1] = int(input(f'{variables[k][0]}: '))
                 except ValueError:
                     print('Please, type a integer! ')
                 else:
                     break
 
         line()
-        for variable in variables:
-            print(f'{variable[0]}: {variable[1]}')
+
+        print('Now set the radiation intervales:')
+        while True:
+            radiation = []
+            for i in range(1, 3):
+                while True:
+                    try:
+                        radiation.append(int(input(f'Value {i}: ')))
+                    except ValueError:
+                        print('Please, type a integer! ')
+                    else:
+                        break
+            
+            variables[6][1].append(radiation)
+            cont = 'N'
+            while True:
+                cont = input('One more? [Y/N] ').strip().upper()
+                if cont.find('Y') != -1 or cont.find('N') != -1:
+                    line()
+                    break
+
+            if cont == 'N':
+                break
+
+        for k in range(0, 7):
+            print(f'{variables[k][0]}: {variables[k][1]}')
+
         line()
 
         while True:
@@ -54,9 +79,8 @@ need the set the follow variables:')
 
         if cont == 'Y':
             break
+
             
 menu()
 countdown()
-simulation(variables[0][1], variables[1][1], variables[3][1],
-           variables[4][1], variables[2][1], variables[5][1])
-
+simulation(*[variables[i][1] for i in range(0, 7)])
