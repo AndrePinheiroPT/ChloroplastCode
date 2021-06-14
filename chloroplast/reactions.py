@@ -119,18 +119,24 @@ def nadpp_reduction():
 
 
 def show_status():
-    print(f'Thylakoid: Water/{inner_thylakoid_system.length(WATER)}; Oxygen/{inner_thylakoid_system.length(OXYGEN)}; H+/{inner_thylakoid_system.length(HYDROGEN_CATION)}  ', end='')
-    print(f'Stroma: ADP/{stroma_system.length(ADP)}; ATP/{stroma_system.length(ATP)}; NAPH+/{stroma_system.length(NADPP)}; NADPH/{stroma_system.length(NADPH)}; CO2/{stroma_system.length(CARBON_DIOXIDE)}; PGAL/{stroma_system.length(PGAL_S)}; Glicose/{stroma_system.length(GLICOSE)}; H+/{stroma_system.length(HYDROGEN_CATION)}')
+    print(f'Thylakoid: Water {inner_thylakoid_system.length(WATER)} | Oxygen {inner_thylakoid_system.length(OXYGEN)} | H+ {inner_thylakoid_system.length(HYDROGEN_CATION)}  ', end='/  ')
+    print(f'Stroma: ADP {stroma_system.length(ADP)} | ATP {stroma_system.length(ATP)} | NAPH+ {stroma_system.length(NADPP)} | NADPH {stroma_system.length(NADPH)} | CO2 {stroma_system.length(CARBON_DIOXIDE)} | PGAL {stroma_system.length(PGAL_S)} | Glicose {stroma_system.length(GLICOSE)} | H+ {stroma_system.length(HYDROGEN_CATION)} | Ep1 {photosystem1.energy:.2f} | Ep2 {photosystem2.energy:.2f}')
 
 
-def simulation(h2o, co2, adp, nadpp, rudp, oxi_energy):
+def simulation(h2o, co2, rudp, adp, nadpp, oxi_energy, radiation_intervales):
+    random_radiations = []
+    for radiation in radiation_intervales:
+        random_radiations.append(randint(radiation[0], radiation[1]))
+
+    final_radiation = random_radiations[randint(0, len(radiation_intervales) - 1)]
+
     global inner_thylakoid_system, stroma_system
     inner_thylakoid_system = System(h2o * [WATER])
     stroma_system = System(adp*[ADP] + nadpp*[NADPP] + co2*[CARBON_DIOXIDE] + rudp*[RUDP])
 
     while True:
         for i in range(0, light_intensity):
-            photosystem1.photo_reaction(425)
+            photosystem1.photo_reaction(final_radiation)
             photosystem1.check_oxidation(0, oxi_energy)
             water_photolysis()
 
@@ -138,7 +144,7 @@ def simulation(h2o, co2, adp, nadpp, rudp, oxi_energy):
 
         for i in range(0, light_intensity):
             photosystem2.photo_reaction(425)
-            photosystem2.check_oxidation(1, oxi_energy)
+            photosystem2.check_oxidation(1, final_radiation)
 
         atpase()
         nadpp_reduction()
