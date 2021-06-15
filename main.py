@@ -15,12 +15,14 @@ variables = [
 def line():
     print('~'*60)
 
+    
 def countdown():
     print('Starting the simulation in:')
     for cout in range(3, 0, -1):
         print(cout)
         sleep(1)
 
+        
 def menu():
     line()
     print('PhotoCode v1.0.0\n\
@@ -30,8 +32,10 @@ Read the licence for more information')
     line()
     print('Welcome to the PhotoCode! For start a simulation, you\n\
 need the set the follow variables:')
-
+    
+    # Menu loop for check values
     while True:
+        # Set all variables except "radiation"
         for k in range(0, 6):
             while True:
                 try:
@@ -40,9 +44,9 @@ need the set the follow variables:')
                     print('Please, type a integer! ')
                 else:
                     break
-
+        
+        # Set radiation intervales
         line()
-
         print('Now set the radiation intervales:')
         while True:
             radiation = []
@@ -57,6 +61,7 @@ need the set the follow variables:')
             
             variables[6][1].append(radiation)
             cont = 'N'
+            # Ask for add other value
             while True:
                 cont = input('One more? [Y/N] ').strip().upper()
                 if cont.find('Y') != -1 or cont.find('N') != -1:
@@ -65,12 +70,14 @@ need the set the follow variables:')
 
             if cont == 'N':
                 break
-
+        
+        # Show all variable value typed
         for k in range(0, 7):
             print(f'{variables[k][0]}: {variables[k][1]}')
 
         line()
-
+        
+        # Ask for check all values
         while True:
             cont = input('Are you sure? [Y/N] ').strip().upper()
             if cont.find('Y') != -1 or cont.find('N') != -1:
@@ -80,7 +87,7 @@ need the set the follow variables:')
         if cont == 'Y':
             break
 
-            
+# Load menu, countdown and simulatin functions           
 menu()
 countdown()
 simulation(*[variables[i][1] for i in range(0, 7)])
