@@ -25,9 +25,9 @@ factors influence the synthesis of ATP and NADPH (electron transport molecule)
 
 Now in stroma, happens the Calvin Circle. All the processes can be visualized in this image.
 
-![Calvin Circle](https://github.com/AndrePinheiroPT/PhotoCode/blob/main/img/image3.svg)
+![Calvin Circle](https://github.com/AndrePinheiroPT/PhotoCode/blob/main/img/image3.png)
 
-*Mike Jones, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0), via Wikimedia Commons*
+*[Khan Academy](https://pt.khanacademy.org/science/biology/photosynthesis-in-plants/the-calvin-cycle-reactions/a/calvin-cycle)*
 
 The wave length is also a factor which influence the photosynthesis. The photosynthetic pigments in photosystems 
 absorve certain radiations due to wave length. There is an absorption spectrum of the three photosynthetic pigments used in the
