@@ -53,13 +53,22 @@ class Photosystem:
     
     def photo_reaction(self, labmda):
         # Probability of absorve some radiation
-        absorved = True if self.light_chlorophyllA(labmda) < randint(0, 100) else False
-        if absorved and self.electrons != 0:
+        if self.electrons != 0:
             # Get energy of radiation
             frequency = SPEED_OF_LIGHT / labmda
             light_energy = PLANK_MODIFIED * frequency
-            self.energy += light_energy
-        
+            for i in range(0, self.chlorophyllA_length):
+                if self.light_chlorophyllA(labmda) < randint(0, 100):
+                    self.energy += light_energy
+                    
+            for i in range(0, self.chlorophyllB_length):
+                if self.light_chlorophyllB(labmda) < randint(0, 100):
+                    self.energy += light_energy
+                    
+            for i in range(0, self.beta_carotene_length):
+                if self.light_beta_carotene(labmda) < randint(0, 100):
+                    self.energy += light_energy
+                    
     
     def light_chlorophyllA(self, x):
         # chlorophyll A probability function
@@ -76,6 +85,32 @@ class Photosystem:
             return 2.04 * labmda - 500
         elif 270 <= labmda <= 300:
             return -1.57 * labmda + 474
+        
+    def light_chlorophyllB(self, x):
+        # chlorophyll B probability function
+        labmda = x - 400
+        if 0 <= labmda < 68:
+            return 1.18 * labmda + 10
+        elif 68 <= labmda < 90:
+            return -3.9 * labmda + 352
+        elif 90 <= labmda < 210:
+            return 5
+        elif 210 <= labmda < 250:
+            return 0.57 * labmda - 113
+        elif 250 <= labmda <= 300:
+            return -6 * labmda + 180
+        
+    def light_light_beta_carotene(self, x):
+        # Beta carotene probability function
+        labmda = x - 400
+        if 0 <= labmda < 50:
+            return 0.86 * labmda + 27
+        elif 50 <= labmda < 90:
+            return 70
+        elif 90 <= labmda < 100:
+            return -7 * labmda + 700
+        elif 100 <= labmda <= 300:
+            return 0
     
 # Define photosystems
 photosystem1 = Photosystem(23, 12, 40)
