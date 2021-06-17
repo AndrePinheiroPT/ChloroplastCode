@@ -20,6 +20,7 @@ OXYGEN = Molecules('O2', 'Oxygen')
 # Constants about radiation
 SPEED_OF_LIGHT = 3 * 10**8
 PLANK_MODIFIED = 1 * 10**-6 
+light_intensity = 0
 
 # Set systems
 inner_thylakoid_system = []
@@ -53,7 +54,7 @@ class Photosystem:
     
     def photo_reaction(self, labmda):
         # Probability of absorve some radiation
-        if self.electrons != 0:
+        if self.electrons > 0:
             # Get energy of radiation
             frequency = SPEED_OF_LIGHT / labmda
             light_energy = PLANK_MODIFIED * frequency
@@ -100,7 +101,7 @@ class Photosystem:
         elif 250 <= labmda <= 300:
             return -6 * labmda + 180
         
-    def light_light_beta_carotene(self, x):
+    def light_beta_carotene(self, x):
         # Beta carotene probability function
         labmda = x - 400
         if 0 <= labmda < 50:
@@ -173,7 +174,9 @@ def show_status():
     print(f'Stroma: ADP {stroma_system.length(ADP)} | ATP {stroma_system.length(ATP)} | NAPH+ {stroma_system.length(NADPP)} | NADPH {stroma_system.length(NADPH)} | CO2 {stroma_system.length(CARBON_DIOXIDE)} | PGAL {stroma_system.length(PGAL_S)} | Glicose {stroma_system.length(GLICOSE)} | H+ {stroma_system.length(HYDROGEN_CATION)} | Ep1 {photosystem1.energy:.2f} | Ep2 {photosystem2.energy:.2f}')
 
 
-def simulation(h2o, co2, rudp, adp, nadpp, oxi_energy, radiation_intervales):
+def simulation(h2o, co2, rudp, adp, nadpp, oxi_energy, intensity, radiation_intervales):
+    light_intensity = intensity
+
     # Get random value of radiation between intervales 
     random_radiations = []
     for radiation in radiation_intervales:
@@ -200,8 +203,8 @@ def simulation(h2o, co2, rudp, adp, nadpp, oxi_energy, radiation_intervales):
         
         # Photosystem2 energizes electros to produce NADPH
         for i in range(0, light_intensity):
-            photosystem2.photo_reaction(425)
-            photosystem2.check_oxidation(1, final_radiation)
+            photosystem2.photo_reaction(final_radiation)
+            photosystem2.check_oxidation(1, oxi_energy)
         
         atpase()
         nadpp_reduction()

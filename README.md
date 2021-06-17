@@ -37,6 +37,13 @@ program.
 
 *by OpenStax College, Biology*
 
+**Note! For set the radiation intervales, you need open ```RADIATION_INTERVALES.txt``` and add the values like this:**
+```
+423 467
+512 530
+600 673
+```
+
 ## Running the project
 
 Prerequisites:
