@@ -1,6 +1,6 @@
-# PhotoCode
+# ChloroplastCode
 Do you like plants? If yes, check out my program which tries simulate photosynthesis in chloroplast!
-PhotoCode is a python program made to help people understand all processes of photosynthesis in a simple way.
+ChloroplastCode is a python program made to help people understand all processes of photosynthesis in a simple way.
 
 ## How it works? 
 The vegetal cells of plants have a organelle called "chloroplast". In this organelle, happens the photosynthesis,
